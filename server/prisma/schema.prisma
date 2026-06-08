@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+  schemas   = ["sabor_ecuatoriano"]
+}
+
+model Usuario {
+  id           Int      @id @default(autoincrement())
+  username     String   @unique @db.VarChar(50)
+  email        String   @unique @db.VarChar(100)
+  passwordHash String   @map("password_hash") @db.VarChar(255)
+  role         String   @default("user") @db.VarChar(20)
+  createdAt    DateTime @default(now()) @map("created_at")
+  pedidos      Pedido[]
+
+  @@map("usuario")
+  @@schema("sabor_ecuatoriano")
+}
+
+model Producto {
+  id          Int             @id @default(autoincrement())
+  nombre      String          @db.VarChar(100)
+  precio      Float
+  stock       Int             @default(0)
+  categoria   String?         @db.VarChar(50)
+  descripcion String?         @db.VarChar(500)
+  imagen      String?         @db.VarChar(500)
+  createdAt   DateTime        @default(now()) @map("created_at")
+  detalles    PedidoDetalle[]
+
+  @@map("producto")
+  @@schema("sabor_ecuatoriano")
+}
+
+model Pedido {
+  id        Int             @id @default(autoincrement())
+  userId    Int             @map("user_id")
+  total     Float
+  createdAt DateTime        @default(now()) @map("created_at")
+  usuario   Usuario         @relation(fields: [userId], references: [id])
+  detalles  PedidoDetalle[]
+
+  @@map("pedido")
+  @@schema("sabor_ecuatoriano")
+}
+
+model PedidoDetalle {
+  id             Int      @id @default(autoincrement())
+  pedidoId       Int      @map("pedido_id")
+  productoId     Int      @map("producto_id")
+  cantidad       Int
+  precioUnitario Float    @map("precio_unitario")
+  pedido         Pedido   @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+  producto       Producto @relation(fields: [productoId], references: [id])
+
+  @@map("pedido_detalle")
+  @@schema("sabor_ecuatoriano")
+}

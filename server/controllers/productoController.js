@@ -1,0 +1,72 @@
+const productoModel = require("../models/productoModel");
+const logger = require("../logger");
+
+async function listar(req, res, next) {
+  try {
+    const productos = await productoModel.findAll();
+    res.json({ success: true, data: productos });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function obtener(req, res, next) {
+  try {
+    const id = parseInt(req.params.id, 10);
+    const producto = await productoModel.findById(id);
+
+    if (!producto) {
+      return res.status(404).json({ success: false, message: "Producto no encontrado" });
+    }
+
+    res.json({ success: true, data: producto });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function crear(req, res, next) {
+  try {
+    const producto = await productoModel.createProducto(req.body);
+    logger.info("Producto creado", { productoId: producto.id });
+    res.status(201).json({ success: true, data: producto });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function actualizar(req, res, next) {
+  try {
+    const id = parseInt(req.params.id, 10);
+    const existente = await productoModel.findById(id);
+
+    if (!existente) {
+      return res.status(404).json({ success: false, message: "Producto no encontrado" });
+    }
+
+    const producto = await productoModel.updateProducto(id, req.body);
+    logger.info("Producto actualizado", { productoId: id });
+    res.json({ success: true, data: producto });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function eliminar(req, res, next) {
+  try {
+    const id = parseInt(req.params.id, 10);
+    const existente = await productoModel.findById(id);
+
+    if (!existente) {
+      return res.status(404).json({ success: false, message: "Producto no encontrado" });
+    }
+
+    await productoModel.deleteProducto(id);
+    logger.info("Producto eliminado", { productoId: id });
+    res.json({ success: true, message: "Producto eliminado correctamente" });
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = { listar, obtener, crear, actualizar, eliminar };

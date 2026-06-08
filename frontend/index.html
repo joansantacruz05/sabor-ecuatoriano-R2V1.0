@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#2d1810" />
+  <meta name="description" content="Sabor Ecuatoriano · Plataforma e-commerce full stack" />
+  <title>Sabor Ecuatoriano · Reto 2</title>
+  <link rel="stylesheet" href="./assets/styles.css" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+  <div id="alerta-global" class="alerta-global" hidden role="status" aria-live="polite"></div>
+
+  <header class="site-header" role="banner">
+    <div class="header-inner contenedor">
+      <a href="#" class="enlace-tab header-marca" data-tab="inicio" aria-label="Sabor Ecuatoriano - Inicio">
+        <span class="logo-texto">Sabor Ecuatoriano</span>
+      </a>
+
+      <nav class="nav-principal" role="navigation" aria-label="Navegación principal">
+        <a href="#" class="enlace-tab activo" data-tab="inicio">Inicio</a>
+        <a href="#" class="enlace-tab" data-tab="menu">Menú</a>
+        <a href="#" class="enlace-tab" data-tab="pedir">Pedir</a>
+        <a href="#" class="enlace-tab" data-tab="mis-pedidos" id="nav-mis-pedidos" hidden>Mis pedidos</a>
+        <a href="#" class="enlace-tab" data-tab="admin" id="nav-admin" hidden>Admin</a>
+      </nav>
+
+      <div class="header-acciones">
+        <div id="nav-auth"></div>
+        <button type="button" class="btn-carrito" id="btn-abrir-carrito" aria-label="Abrir carrito">
+          Carrito · <span class="badge" id="contador-carrito">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main role="main" class="contenedor">
+
+    <section class="tab-panel activa" id="tab-inicio" role="tabpanel">
+      <div class="hero hero-imagen">
+        <div class="hero-contenido">
+          <span class="eyebrow eyebrow-claro">Reto 2 · Full Stack</span>
+          <h1>Auténtica cocina ecuatoriana</h1>
+          <p>Catálogo desde API REST, carrito persistente, pedidos en SQL Server y panel de administración.</p>
+          <button type="button" class="btn btn-dorado enlace-tab" data-tab="menu">Ver el menú →</button>
+        </div>
+      </div>
+      <div class="features-inicio">
+        <div class="feature"><div class="feature-num">01</div><h3>API REST</h3><p>Productos y pedidos consumidos con Fetch/async-await.</p></div>
+        <div class="feature"><div class="feature-num">02</div><h3>JWT + Roles</h3><p>Login obligatorio para comprar. Admin gestiona el catálogo.</p></div>
+        <div class="feature"><div class="feature-num">03</div><h3>Prisma + SQL</h3><p>Pedidos persistidos en base de datos relacional.</p></div>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-menu" role="tabpanel" hidden>
+      <div class="menu-header">
+        <span class="eyebrow">Nuestro menú</span>
+        <h2>Platos tradicionales</h2>
+        <div class="separador-titulo"></div>
+        <div class="filtros-categoria" role="tablist" aria-label="Filtrar por categoría">
+          <button type="button" class="btn-filtro activo" data-categoria="Todos" aria-selected="true">Todos</button>
+          <button type="button" class="btn-filtro" data-categoria="Sopas">Sopas</button>
+          <button type="button" class="btn-filtro" data-categoria="Platos fuertes">Platos fuertes</button>
+          <button type="button" class="btn-filtro" data-categoria="Mariscos">Mariscos</button>
+          <button type="button" class="btn-filtro" data-categoria="Desayunos">Desayunos</button>
+          <button type="button" class="btn-filtro" data-categoria="Bebidas">Bebidas</button>
+          <button type="button" class="btn-filtro" data-categoria="Snacks">Snacks</button>
+          <button type="button" class="btn-filtro" data-categoria="Postres">Postres</button>
+        </div>
+      </div>
+      <div class="grid-platos" id="grid-platos" aria-live="polite" aria-busy="true"></div>
+    </section>
+
+    <section class="tab-panel" id="tab-pedir" role="tabpanel" hidden>
+      <div class="pedir-header">
+        <span class="eyebrow">Checkout</span>
+        <h2>Confirmar pedido</h2>
+        <div class="separador-titulo"></div>
+        <p class="texto-ayuda" id="pedir-login-aviso" aria-live="polite">
+          Debes <button type="button" class="link-btn enlace-tab" data-tab="login">iniciar sesión</button> para confirmar tu pedido.
+        </p>
+      </div>
+      <div class="pedir-grid">
+        <div class="pedir-resumen">
+          <h3>Resumen</h3>
+          <div id="resumen-items"></div>
+          <div class="resumen-totales" id="resumen-totales" hidden>
+            <div class="linea-total"><span>Subtotal</span><span>$<span id="resumen-subtotal">0.00</span></span></div>
+            <div class="linea-total"><span>IVA (15%)</span><span>$<span id="resumen-iva">0.00</span></span></div>
+            <div class="linea-total total"><span>Total</span><span>$<span id="resumen-total">0.00</span></span></div>
+          </div>
+          <button type="button" class="btn btn-primario btn-confirmar" id="btn-confirmar-pedido">Confirmar pedido</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-login" role="tabpanel" hidden>
+      <div class="auth-panel">
+        <h2 id="auth-titulo">Iniciar sesión</h2>
+        <form id="form-login" novalidate>
+          <div class="campo">
+            <label for="login-email">Correo electrónico</label>
+            <input id="login-email" type="email" required autocomplete="email" />
+          </div>
+          <div class="campo">
+            <label for="login-password">Contraseña</label>
+            <input id="login-password" type="password" required autocomplete="current-password" minlength="8" />
+          </div>
+          <small class="error-mensaje" id="error-login" aria-live="assertive"></small>
+          <button type="submit" class="btn btn-primario">Entrar</button>
+          <p class="auth-switch">¿No tienes cuenta? <button type="button" class="link-btn" id="btn-mostrar-register">Regístrate</button></p>
+          <p class="auth-demo"><small>Demo admin: admin@saborecuatoriano.ec / Admin123!<br>Demo user: user@saborecuatoriano.ec / User12345</small></p>
+        </form>
+        <form id="form-register" novalidate hidden>
+          <div class="campo">
+            <label for="register-username">Usuario</label>
+            <input id="register-username" type="text" required minlength="3" maxlength="50" />
+          </div>
+          <div class="campo">
+            <label for="register-email">Correo</label>
+            <input id="register-email" type="email" required autocomplete="email" />
+          </div>
+          <div class="campo">
+            <label for="register-password">Contraseña</label>
+            <input id="register-password" type="password" required minlength="8" autocomplete="new-password" />
+          </div>
+          <small class="error-mensaje" id="error-register" aria-live="assertive"></small>
+          <button type="submit" class="btn btn-primario">Crear cuenta</button>
+          <p class="auth-switch">¿Ya tienes cuenta? <button type="button" class="link-btn" id="btn-mostrar-login">Inicia sesión</button></p>
+        </form>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-mis-pedidos" role="tabpanel" hidden>
+      <div class="pedir-header">
+        <span class="eyebrow">Historial</span>
+        <h2>Mis pedidos</h2>
+        <div class="separador-titulo"></div>
+      </div>
+      <div id="lista-pedidos" aria-live="polite"></div>
+    </section>
+
+    <section class="tab-panel" id="tab-admin" role="tabpanel" hidden>
+      <div class="pedir-header">
+        <span class="eyebrow">Administración</span>
+        <h2>Panel Admin</h2>
+        <div class="separador-titulo"></div>
+      </div>
+
+      <div class="admin-grid">
+        <div class="admin-tabla-wrap">
+          <div class="admin-toolbar">
+            <h3>Productos</h3>
+            <button type="button" class="btn btn-secundario btn-sm" id="btn-nuevo-producto">+ Nuevo</button>
+          </div>
+          <table class="tabla-admin" aria-label="Listado de productos">
+            <thead>
+              <tr><th>ID</th><th>Nombre</th><th>Categoría</th><th>Precio</th><th>Stock</th><th>Acciones</th></tr>
+            </thead>
+            <tbody id="admin-productos-body"></tbody>
+          </table>
+        </div>
+
+        <form id="form-admin-producto" class="admin-form" novalidate>
+          <h3 id="admin-form-titulo">Nuevo producto</h3>
+          <input type="hidden" id="admin-producto-id" />
+          <div class="campo"><label for="admin-nombre">Nombre</label><input id="admin-nombre" required /></div>
+          <div class="campo"><label for="admin-categoria">Categoría</label><input id="admin-categoria" /></div>
+          <div class="campo"><label for="admin-precio">Precio</label><input id="admin-precio" type="number" step="0.01" min="0.01" required /></div>
+          <div class="campo"><label for="admin-stock">Stock</label><input id="admin-stock" type="number" min="0" required /></div>
+          <div class="campo"><label for="admin-descripcion">Descripción</label><textarea id="admin-descripcion" rows="3"></textarea></div>
+          <div class="campo"><label for="admin-imagen">URL imagen</label><input id="admin-imagen" type="url" /></div>
+          <button type="submit" class="btn btn-primario">Guardar</button>
+          <div id="admin-feedback" class="feedback" aria-live="polite"></div>
+        </form>
+      </div>
+
+      <div class="admin-pedidos">
+        <h3>Todos los pedidos</h3>
+        <div id="lista-pedidos-admin" aria-live="polite"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-bottom contenedor">© 2025 Sabor Ecuatoriano · Reto 2 Full Stack · PUCE Virtual</div>
+  </footer>
+
+  <div class="drawer-overlay" id="drawer-overlay" hidden></div>
+  <aside class="drawer-carrito" id="drawer-carrito" role="dialog" aria-labelledby="drawer-titulo" aria-hidden="true" hidden>
+    <header class="drawer-header">
+      <h2 id="drawer-titulo">Tu pedido</h2>
+      <button type="button" class="btn-cerrar" id="btn-cerrar-carrito" aria-label="Cerrar">×</button>
+    </header>
+    <div class="drawer-body" id="drawer-body" aria-live="polite"></div>
+    <footer class="drawer-footer" id="drawer-footer" hidden>
+      <div class="totales">
+        <div class="linea-total"><span>Subtotal</span><span>$<span id="subtotal">0.00</span></span></div>
+        <div class="linea-total"><span>IVA (15%)</span><span>$<span id="iva">0.00</span></span></div>
+        <div class="linea-total total"><span>Total</span><span>$<span id="total">0.00</span></span></div>
+      </div>
+      <div class="drawer-acciones">
+        <button type="button" class="btn btn-secundario" id="btn-vaciar">Vaciar</button>
+        <button type="button" class="btn btn-primario enlace-tab" data-tab="pedir">Ir a pedir →</button>
+      </div>
+    </footer>
+  </aside>
+
+  <div class="modal-overlay" id="modal-exito-overlay" hidden></div>
+  <div class="modal-exito" id="modal-exito" role="dialog" aria-labelledby="exito-titulo" aria-modal="true" aria-hidden="true" hidden>
+    <h2 id="exito-titulo">¡Pedido confirmado!</h2>
+    <p>Tu pedido fue guardado en la base de datos.</p>
+    <div class="modal-exito-numero"><span>Número</span><strong id="exito-numero">#0000</strong></div>
+    <button type="button" class="btn btn-dorado" id="btn-cerrar-exito">Aceptar</button>
+  </div>
+
+  <script src="./models/api.js"></script>
+  <script src="./models/authModel.js"></script>
+  <script src="./models/carritoModel.js"></script>
+  <script src="./models/productoModel.js"></script>
+  <script src="./models/pedidoModel.js"></script>
+  <script src="./views/uiView.js"></script>
+  <script src="./views/catalogoView.js"></script>
+  <script src="./views/carritoView.js"></script>
+  <script src="./views/authView.js"></script>
+  <script src="./views/pedidosView.js"></script>
+  <script src="./views/adminView.js"></script>
+  <script src="./controllers/authController.js"></script>
+  <script src="./controllers/catalogoController.js"></script>
+  <script src="./controllers/carritoController.js"></script>
+  <script src="./controllers/pedidoController.js"></script>
+  <script src="./controllers/adminController.js"></script>
+  <script src="./controllers/appController.js"></script>
+</body>
+</html>
