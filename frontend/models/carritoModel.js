@@ -2,6 +2,8 @@ const CarritoModel = (function () {
   "use strict";
 
   const LS_KEY = "saborec_carrito_v2";
+  const MAX_POR_PRODUCTO = 10;
+  const MAX_TOTAL_ITEMS = 30;
 
   let carrito = [];
 
@@ -25,9 +27,13 @@ const CarritoModel = (function () {
   }
 
   function agregar(producto) {
+    const totalItems = carrito.reduce((s, i) => s + i.cantidad, 0);
+    if (totalItems >= MAX_TOTAL_ITEMS) return "límite total alcanzado (máx. " + MAX_TOTAL_ITEMS + " productos en total)";
+
     const existente = carrito.find((i) => i.productoId === producto.id);
     if (existente) {
-      if (existente.cantidad >= producto.stock) return false;
+      if (existente.cantidad >= MAX_POR_PRODUCTO) return "máximo " + MAX_POR_PRODUCTO + " unidades por producto";
+      if (existente.cantidad >= producto.stock) return "stock insuficiente";
       existente.cantidad++;
     } else {
       carrito.push({
@@ -49,8 +55,9 @@ const CarritoModel = (function () {
 
     if (cantidad <= 0) {
       carrito.splice(index, 1);
-    } else if (cantidad <= carrito[index].stock) {
-      carrito[index].cantidad = cantidad;
+    } else {
+      const max = Math.min(carrito[index].stock, MAX_POR_PRODUCTO);
+      carrito[index].cantidad = Math.min(cantidad, max);
     }
     guardar();
   }

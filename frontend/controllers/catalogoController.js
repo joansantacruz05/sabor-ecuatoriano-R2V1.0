@@ -32,8 +32,8 @@ const CatalogoController = (function () {
       if (!producto) return;
 
       const ok = CarritoModel.agregar(producto);
-      if (!ok) {
-        UiView.mostrarAlerta("No hay más stock disponible para " + producto.nombre, "error");
+      if (ok !== true) {
+        UiView.mostrarAlerta(producto.nombre + ": " + ok, "error");
         return;
       }
 
