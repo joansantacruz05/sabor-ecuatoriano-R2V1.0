@@ -2,5 +2,11 @@
   "name": "sabor-ecuatoriano",
   "version": "2.0.0",
   "private": true,
-  "description": "Sabor Ecuatoriano - Full Stack E-commerce"
+  "description": "Sabor Ecuatoriano - Full Stack E-commerce",
+  "engines": {
+    "node": "20.x"
+  },
+  "scripts": {
+    "vercel-build": "cd server && npx prisma generate"
+  }
 }
