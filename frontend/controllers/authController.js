@@ -28,7 +28,9 @@ const AuthController = (function () {
       try {
         const user = await AuthModel.login(email, password);
         UiView.actualizarNavUsuario(user);
-        PedidoController.actualizarAvisoLogin();
+        if (typeof PedidoController !== "undefined") {
+          PedidoController.actualizarAvisoLogin();
+        }
         UiView.mostrarAlerta("Bienvenido, " + user.username + ".", "ok");
         window.location.href = "menu.html";
       } catch (err) {
@@ -47,6 +49,9 @@ const AuthController = (function () {
       try {
         const user = await AuthModel.register(username, email, password);
         UiView.actualizarNavUsuario(user);
+        if (typeof PedidoController !== "undefined") {
+          PedidoController.actualizarAvisoLogin();
+        }
         UiView.mostrarAlerta("Cuenta creada exitosamente.", "ok");
         window.location.href = "menu.html";
       } catch (err) {
