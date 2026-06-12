@@ -4,8 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#2d1810" />
-  <meta name="description" content="Sabor Ecuatoriano · Plataforma e-commerce full stack" />
-  <title>Sabor Ecuatoriano · Inicio</title>
+  <meta name="description" content="Administración · Sabor Ecuatoriano" />
+  <title>Sabor Ecuatoriano · Administración</title>
   <link rel="stylesheet" href="./assets/styles.css" />
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -20,11 +20,11 @@
       </a>
 
       <nav class="nav-principal" role="navigation" aria-label="Navegación principal">
-        <a href="inicio.html" class="activo">Inicio</a>
+        <a href="inicio.html">Inicio</a>
         <a href="menu.html">Menú</a>
         <a href="pedir.html">Pedir</a>
         <a href="mis-pedidos.html" id="nav-mis-pedidos" hidden>Mis pedidos</a>
-        <a href="admin.html" id="nav-admin" hidden>Admin</a>
+        <a href="admin.html" class="activo" id="nav-admin" hidden>Admin</a>
       </nav>
 
       <div class="header-acciones">
@@ -37,34 +37,43 @@
   </header>
 
   <main role="main" class="contenedor">
-    <div class="hero hero-imagen">
-      <div class="hero-contenido">
-        <span class="eyebrow eyebrow-claro">Reto 2 · Full Stack</span>
-        <h1>Auténtica cocina ecuatoriana</h1>
-        <p>Catálogo desde API REST, carrito persistente, pedidos en base de datos y panel de administración.</p>
-        <a href="menu.html" class="btn btn-dorado">Ver el menú →</a>
-      </div>
+    <div class="pedir-header">
+      <span class="eyebrow">Administración</span>
+      <h2>Panel Admin</h2>
+      <div class="separador-titulo"></div>
     </div>
-    <div class="quienes-somos">
-      <div class="quienes-somos-header">
-        <span class="eyebrow">Sobre nosotros</span>
-        <h2>¿Quiénes somos?</h2>
-        <div class="separador-titulo"></div>
+
+    <div class="admin-grid">
+      <div class="admin-tabla-wrap">
+        <div class="admin-toolbar">
+          <h3>Productos</h3>
+          <button type="button" class="btn btn-secundario btn-sm" id="btn-nuevo-producto">+ Nuevo</button>
+        </div>
+        <table class="tabla-admin" aria-label="Listado de productos">
+          <thead>
+            <tr><th>ID</th><th>Nombre</th><th>Categoría</th><th>Precio</th><th>Stock</th><th>Acciones</th></tr>
+          </thead>
+          <tbody id="admin-productos-body"></tbody>
+        </table>
       </div>
-      <div class="bloques-historia">
-        <div class="bloque-historia">
-          <h3>Pasión por la cocina ecuatoriana</h3>
-          <p>Somos un equipo apasionado por compartir los sabores tradicionales del Ecuador. Cada plato que ofrecemos representa la riqueza gastronómica de nuestras regiones, desde la Sierra hasta la Costa.</p>
-        </div>
-        <div class="bloque-historia">
-          <h3>Tecnología y tradición</h3>
-          <p>Combinamos lo mejor de dos mundos: recetas ancestrales preparadas con ingredientes frescos, y una plataforma moderna que te permite disfrutarlas desde la comodidad de tu hogar.</p>
-        </div>
-        <div class="bloque-historia">
-          <h3>Compromiso local</h3>
-          <p>Trabajamos directamente con productores locales para garantizar ingredientes frescos y de calidad, apoyando así a las comunidades agrícolas de nuestro país.</p>
-        </div>
-      </div>
+
+      <form id="form-admin-producto" class="admin-form" novalidate>
+        <h3 id="admin-form-titulo">Nuevo producto</h3>
+        <input type="hidden" id="admin-producto-id" />
+        <div class="campo"><label for="admin-nombre">Nombre</label><input id="admin-nombre" required /></div>
+        <div class="campo"><label for="admin-categoria">Categoría</label><input id="admin-categoria" /></div>
+        <div class="campo"><label for="admin-precio">Precio</label><input id="admin-precio" type="number" step="0.01" min="0.01" required /></div>
+        <div class="campo"><label for="admin-stock">Stock</label><input id="admin-stock" type="number" min="0" required /></div>
+        <div class="campo"><label for="admin-descripcion">Descripción</label><textarea id="admin-descripcion" rows="3"></textarea></div>
+        <div class="campo"><label for="admin-imagen">URL imagen</label><input id="admin-imagen" type="url" /></div>
+        <button type="submit" class="btn btn-primario">Guardar</button>
+        <div id="admin-feedback" class="feedback" aria-live="polite"></div>
+      </form>
+    </div>
+
+    <div class="admin-pedidos">
+      <h3>Todos los pedidos</h3>
+      <div id="lista-pedidos" aria-live="polite"></div>
     </div>
   </main>
 
@@ -111,10 +120,22 @@
   <script src="./models/api.js"></script>
   <script src="./models/authModel.js"></script>
   <script src="./models/carritoModel.js"></script>
+  <script src="./models/productoModel.js"></script>
+  <script src="./models/pedidoModel.js"></script>
   <script src="./views/uiView.js"></script>
+  <script src="./views/adminView.js"></script>
+  <script src="./views/pedidosView.js"></script>
   <script src="./views/carritoView.js"></script>
   <script src="./controllers/carritoController.js"></script>
+  <script src="./controllers/adminController.js"></script>
+  <script src="./controllers/pedidoController.js"></script>
   <script src="./controllers/authController.js"></script>
   <script src="./controllers/appController.js"></script>
+  <script>$(function () {
+    if (!AuthModel.isAdmin()) { window.location.href = "inicio.html"; return; }
+    AdminController.cargarProductos();
+    PedidoController.cargarTodosPedidos();
+    AdminView.llenarFormulario(null);
+  });</script>
 </body>
 </html>

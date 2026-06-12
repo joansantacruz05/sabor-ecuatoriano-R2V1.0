@@ -1,6 +1,6 @@
 # Sabor Ecuatoriano — Reto 2 (Full Stack)
 
-Plataforma e-commerce derivada del Reto 1 (carrito de compras), transformada en una solución **cliente-servidor** con API REST, persistencia en **SQL Server** mediante **Prisma ORM**, autenticación **JWT**, roles **admin/user** y frontend **MVC** que consume la API.
+Plataforma e-commerce derivada del Reto 1 (carrito de compras), transformada en una solución **cliente-servidor** con API REST, persistencia en **PostgreSQL (Supabase)** mediante **Prisma ORM**, autenticación **JWT**, roles **admin/user** y frontend **MVC** que consume la API.
 
 ## Descripción del sistema
 
@@ -40,8 +40,8 @@ server/
 ## Requisitos previos
 
 - **Node.js** 18+
-- **SQL Server** (Express o Developer) con una base de datos creada, por ejemplo `SaborEcuatoriano`
-- **Live Server** (VS Code/Cursor) u otro servidor estático para el frontend en `http://localhost:5500`
+- **Cuenta en Supabase** (gratuita) con un proyecto creado
+- Navegador moderno (el frontend se sirve desde el propio backend en `http://localhost:3000`)
 
 ---
 
@@ -49,11 +49,7 @@ server/
 
 ### 1. Base de datos
 
-Crea la base en SQL Server:
-
-```sql
-CREATE DATABASE SaborEcuatoriano;
-```
+Crea un proyecto en [Supabase](https://supabase.com) y desde el panel **Connect → ORM** copia las URIs del pooler compartido. Luego edita `server/.env` con tus credenciales.
 
 ### 2. Backend
 

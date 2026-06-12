@@ -7,7 +7,7 @@ const AuthController = (function () {
       UiView.actualizarNavUsuario(null);
       PedidoController.actualizarAvisoLogin();
       UiView.mostrarAlerta("Sesión cerrada correctamente.", "info");
-      UiView.cambiarTab("inicio");
+      window.location.href = "inicio.html";
     });
 
     $("#btn-mostrar-register").on("click", function () {
@@ -30,8 +30,7 @@ const AuthController = (function () {
         UiView.actualizarNavUsuario(user);
         PedidoController.actualizarAvisoLogin();
         UiView.mostrarAlerta("Bienvenido, " + user.username + ".", "ok");
-        UiView.cambiarTab("menu");
-        CatalogoController.cargar();
+        window.location.href = "menu.html";
       } catch (err) {
         AuthView.mostrarErrorLogin(err.message || "Error al iniciar sesión");
       }
@@ -49,7 +48,7 @@ const AuthController = (function () {
         const user = await AuthModel.register(username, email, password);
         UiView.actualizarNavUsuario(user);
         UiView.mostrarAlerta("Cuenta creada exitosamente.", "ok");
-        UiView.cambiarTab("menu");
+        window.location.href = "menu.html";
       } catch (err) {
         AuthView.mostrarErrorRegister(err.message || "Error al registrarse");
       }

@@ -4,8 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#2d1810" />
-  <meta name="description" content="Sabor Ecuatoriano · Plataforma e-commerce full stack" />
-  <title>Sabor Ecuatoriano · Inicio</title>
+  <meta name="description" content="Menú · Sabor Ecuatoriano" />
+  <title>Sabor Ecuatoriano · Menú</title>
   <link rel="stylesheet" href="./assets/styles.css" />
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -20,8 +20,8 @@
       </a>
 
       <nav class="nav-principal" role="navigation" aria-label="Navegación principal">
-        <a href="inicio.html" class="activo">Inicio</a>
-        <a href="menu.html">Menú</a>
+        <a href="inicio.html">Inicio</a>
+        <a href="menu.html" class="activo">Menú</a>
         <a href="pedir.html">Pedir</a>
         <a href="mis-pedidos.html" id="nav-mis-pedidos" hidden>Mis pedidos</a>
         <a href="admin.html" id="nav-admin" hidden>Admin</a>
@@ -37,35 +37,22 @@
   </header>
 
   <main role="main" class="contenedor">
-    <div class="hero hero-imagen">
-      <div class="hero-contenido">
-        <span class="eyebrow eyebrow-claro">Reto 2 · Full Stack</span>
-        <h1>Auténtica cocina ecuatoriana</h1>
-        <p>Catálogo desde API REST, carrito persistente, pedidos en base de datos y panel de administración.</p>
-        <a href="menu.html" class="btn btn-dorado">Ver el menú →</a>
+    <div class="menu-header">
+      <span class="eyebrow">Nuestro menú</span>
+      <h2>Platos tradicionales</h2>
+      <div class="separador-titulo"></div>
+      <div class="filtros-categoria" role="tablist" aria-label="Filtrar por categoría">
+        <button type="button" class="btn-filtro activo" data-categoria="Todos" aria-selected="true">Todos</button>
+        <button type="button" class="btn-filtro" data-categoria="Sopas">Sopas</button>
+        <button type="button" class="btn-filtro" data-categoria="Platos fuertes">Platos fuertes</button>
+        <button type="button" class="btn-filtro" data-categoria="Mariscos">Mariscos</button>
+        <button type="button" class="btn-filtro" data-categoria="Desayunos">Desayunos</button>
+        <button type="button" class="btn-filtro" data-categoria="Bebidas">Bebidas</button>
+        <button type="button" class="btn-filtro" data-categoria="Snacks">Snacks</button>
+        <button type="button" class="btn-filtro" data-categoria="Postres">Postres</button>
       </div>
     </div>
-    <div class="quienes-somos">
-      <div class="quienes-somos-header">
-        <span class="eyebrow">Sobre nosotros</span>
-        <h2>¿Quiénes somos?</h2>
-        <div class="separador-titulo"></div>
-      </div>
-      <div class="bloques-historia">
-        <div class="bloque-historia">
-          <h3>Pasión por la cocina ecuatoriana</h3>
-          <p>Somos un equipo apasionado por compartir los sabores tradicionales del Ecuador. Cada plato que ofrecemos representa la riqueza gastronómica de nuestras regiones, desde la Sierra hasta la Costa.</p>
-        </div>
-        <div class="bloque-historia">
-          <h3>Tecnología y tradición</h3>
-          <p>Combinamos lo mejor de dos mundos: recetas ancestrales preparadas con ingredientes frescos, y una plataforma moderna que te permite disfrutarlas desde la comodidad de tu hogar.</p>
-        </div>
-        <div class="bloque-historia">
-          <h3>Compromiso local</h3>
-          <p>Trabajamos directamente con productores locales para garantizar ingredientes frescos y de calidad, apoyando así a las comunidades agrícolas de nuestro país.</p>
-        </div>
-      </div>
-    </div>
+    <div class="grid-platos" id="grid-platos" aria-live="polite" aria-busy="true"></div>
   </main>
 
   <footer class="site-footer" role="contentinfo">
@@ -111,10 +98,14 @@
   <script src="./models/api.js"></script>
   <script src="./models/authModel.js"></script>
   <script src="./models/carritoModel.js"></script>
+  <script src="./models/productoModel.js"></script>
   <script src="./views/uiView.js"></script>
+  <script src="./views/catalogoView.js"></script>
   <script src="./views/carritoView.js"></script>
+  <script src="./controllers/catalogoController.js"></script>
   <script src="./controllers/carritoController.js"></script>
   <script src="./controllers/authController.js"></script>
   <script src="./controllers/appController.js"></script>
+  <script>$(function () { CatalogoController.cargar(); });</script>
 </body>
 </html>

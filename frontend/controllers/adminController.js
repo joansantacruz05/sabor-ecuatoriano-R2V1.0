@@ -5,8 +5,7 @@ const AdminController = (function () {
 
   async function cargarProductos() {
     if (!AuthModel.isAdmin()) {
-      UiView.cambiarTab("inicio");
-      UiView.mostrarAlerta("Acceso restringido a administradores.", "error");
+      window.location.href = "inicio.html";
       return;
     }
 
@@ -31,17 +30,6 @@ const AdminController = (function () {
   }
 
   function init() {
-    $(document).on("click", ".enlace-tab[data-tab='admin']", function () {
-      if (!AuthModel.isAdmin()) {
-        UiView.mostrarAlerta("No tienes permisos de administrador.", "error");
-        UiView.cambiarTab("inicio");
-        return;
-      }
-      cargarProductos();
-      cargarPedidosAdmin();
-      AdminView.llenarFormulario(null);
-    });
-
     $("#btn-nuevo-producto").on("click", function () {
       AdminView.llenarFormulario(null);
     });

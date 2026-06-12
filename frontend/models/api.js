@@ -1,7 +1,7 @@
 const ApiModel = (function () {
   "use strict";
 
-  const API_BASE = "http://localhost:3000/api";
+  const API_BASE = "/api";
 
   async function request(endpoint, options) {
     const config = Object.assign(

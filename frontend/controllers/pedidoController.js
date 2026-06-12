@@ -4,7 +4,7 @@ const PedidoController = (function () {
   async function confirmarPedido() {
     if (!AuthModel.isLoggedIn()) {
       UiView.mostrarAlerta("Debes iniciar sesión para confirmar tu pedido.", "error");
-      UiView.cambiarTab("login");
+      window.location.href = "login.html";
       return;
     }
 
@@ -26,7 +26,7 @@ const PedidoController = (function () {
         AuthModel.logout();
         UiView.actualizarNavUsuario(null);
         UiView.mostrarAlerta("Tu sesión expiró. Inicia sesión de nuevo.", "error");
-        UiView.cambiarTab("login");
+        window.location.href = "login.html";
       } else {
         UiView.mostrarAlerta(err.message || "Error al registrar el pedido", "error");
       }
@@ -35,7 +35,7 @@ const PedidoController = (function () {
 
   async function cargarMisPedidos() {
     if (!AuthModel.isLoggedIn()) {
-      UiView.cambiarTab("login");
+      window.location.href = "login.html";
       return;
     }
 
@@ -52,6 +52,15 @@ const PedidoController = (function () {
       $("#pedir-login-aviso").attr("hidden", true);
     } else {
       $("#pedir-login-aviso").removeAttr("hidden");
+    }
+  }
+
+  async function cargarTodosPedidos() {
+    try {
+      const pedidos = await PedidoModel.todos();
+      PedidosView.renderLista(pedidos, true);
+    } catch (err) {
+      $("#lista-pedidos").html('<p class="mensaje-vacio" role="alert">' + err.message + '</p>');
     }
   }
 
@@ -72,8 +81,7 @@ const PedidoController = (function () {
 
     $("#btn-cerrar-exito, #modal-exito-overlay").on("click", function () {
       UiView.cerrarModal("modal-exito");
-      UiView.cambiarTab("mis-pedidos");
-      cargarMisPedidos();
+      window.location.href = "mis-pedidos.html";
     });
   }
 
