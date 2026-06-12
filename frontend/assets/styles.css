@@ -950,6 +950,16 @@ h1, h2, h3, h4 {
   min-height: 16px;
 }
 
+.exito-mensaje {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--exito);
+  margin-top: 8px;
+  padding: 8px 10px;
+  background: rgba(21, 128, 61, 0.08);
+  border-radius: var(--radio-sm);
+}
+
 .feedback {
   padding: 12px 14px;
   border-radius: var(--radio-sm);

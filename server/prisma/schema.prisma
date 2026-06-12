@@ -10,13 +10,15 @@ datasource db {
 }
 
 model Usuario {
-  id           Int      @id @default(autoincrement())
-  username     String   @unique @db.VarChar(50)
-  email        String   @unique @db.VarChar(100)
-  passwordHash String   @map("password_hash") @db.VarChar(255)
-  role         String   @default("user") @db.VarChar(20)
-  createdAt    DateTime @default(now()) @map("created_at")
-  pedidos      Pedido[]
+  id                Int       @id @default(autoincrement())
+  username          String    @unique @db.VarChar(50)
+  email             String    @unique @db.VarChar(100)
+  passwordHash      String    @map("password_hash") @db.VarChar(255)
+  role              String    @default("user") @db.VarChar(20)
+  resetToken        String?   @unique @map("reset_token") @db.VarChar(255)
+  resetTokenExpiry  DateTime? @map("reset_token_expiry")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  pedidos           Pedido[]
 
   @@map("usuario")
   @@schema("sabor_ecuatoriano")

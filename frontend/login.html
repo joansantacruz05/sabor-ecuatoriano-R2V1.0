@@ -50,6 +50,7 @@
         </div>
         <small class="error-mensaje" id="error-login" aria-live="assertive"></small>
         <button type="submit" class="btn btn-primario">Entrar</button>
+        <p class="auth-switch"><button type="button" class="link-btn" id="btn-mostrar-forgot">¿Olvidaste tu contraseña?</button></p>
         <p class="auth-switch">¿No tienes cuenta? <button type="button" class="link-btn" id="btn-mostrar-register">Regístrate</button></p>
         <p class="auth-demo"><small>Demo admin: admin@saborecuatoriano.ec / Admin123!<br>Demo user: user@saborecuatoriano.ec / User12345</small></p>
       </form>
@@ -69,6 +70,30 @@
         <small class="error-mensaje" id="error-register" aria-live="assertive"></small>
         <button type="submit" class="btn btn-primario">Crear cuenta</button>
         <p class="auth-switch">¿Ya tienes cuenta? <button type="button" class="link-btn" id="btn-mostrar-login">Inicia sesión</button></p>
+      </form>
+      <form id="form-forgot" novalidate hidden>
+        <div class="campo">
+          <label for="forgot-email">Correo electrónico</label>
+          <input id="forgot-email" type="email" required autocomplete="email" />
+        </div>
+        <small class="error-mensaje" id="error-forgot" aria-live="assertive"></small>
+        <small class="exito-mensaje" id="exito-forgot" hidden aria-live="polite"></small>
+        <button type="submit" class="btn btn-primario">Enviar</button>
+        <p class="auth-switch"><button type="button" class="link-btn" id="btn-mostrar-login">Volver a inicio de sesión</button></p>
+      </form>
+      <form id="form-reset" novalidate hidden>
+        <hr>
+        <div class="campo">
+          <label for="reset-token">Token de recuperación</label>
+          <input id="reset-token" type="text" readonly />
+        </div>
+        <div class="campo">
+          <label for="reset-password">Nueva contraseña</label>
+          <input id="reset-password" type="password" required minlength="8" autocomplete="new-password" />
+        </div>
+        <small class="error-mensaje" id="error-reset" aria-live="assertive"></small>
+        <button type="submit" class="btn btn-primario">Restablecer contraseña</button>
+        <p class="auth-switch"><button type="button" class="link-btn" id="btn-mostrar-login">Volver a inicio de sesión</button></p>
       </form>
     </div>
   </main>
@@ -122,6 +147,5 @@
   <script src="./controllers/carritoController.js"></script>
   <script src="./controllers/authController.js"></script>
   <script src="./controllers/appController.js"></script>
-  <script>$(function () { AuthController.init(); });</script>
 </body>
 </html>

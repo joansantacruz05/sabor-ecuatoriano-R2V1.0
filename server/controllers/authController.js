@@ -1,3 +1,4 @@
+const crypto = require("crypto");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const usuarioModel = require("../models/usuarioModel");
@@ -94,4 +95,47 @@ async function me(req, res, next) {
   }
 }
 
-module.exports = { register, login, me };
+async function forgotPassword(req, res, next) {
+  try {
+    const { email } = req.body;
+    const usuario = await usuarioModel.findByEmail(email);
+    if (!usuario) {
+      return res.json({ success: true, message: "Si el correo existe, recibirás un enlace de recuperación." });
+    }
+
+    const token = crypto.randomBytes(32).toString("hex");
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+    await usuarioModel.setResetToken(email, token, expiresAt);
+
+    logger.info("Password reset token generado", { userId: usuario.id, token });
+
+    res.json({
+      success: true,
+      message: "Si el correo existe, recibirás un enlace de recuperación.",
+      resetToken: token
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function resetPassword(req, res, next) {
+  try {
+    const { token, password } = req.body;
+    const usuario = await usuarioModel.findByResetToken(token);
+    if (!usuario || !usuario.resetTokenExpiry || usuario.resetTokenExpiry < new Date()) {
+      return res.status(400).json({ success: false, message: "Token inválido o expirado." });
+    }
+
+    const passwordHash = await bcrypt.hash(password, 12);
+    await usuarioModel.updatePassword(usuario.id, passwordHash);
+
+    logger.info("Contraseña restablecida", { userId: usuario.id });
+
+    res.json({ success: true, message: "Contraseña actualizada correctamente." });
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = { register, login, me, forgotPassword, resetPassword };

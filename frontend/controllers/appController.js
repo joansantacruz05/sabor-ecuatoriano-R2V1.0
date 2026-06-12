@@ -28,6 +28,7 @@ const AppController = (function () {
       window.location.href = tab + ".html";
     });
 
+    AuthController.init();
     CarritoController.init();
     UiView.actualizarNavUsuario(user);
     CarritoView.renderDrawer();

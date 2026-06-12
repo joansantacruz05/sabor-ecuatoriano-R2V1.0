@@ -48,6 +48,14 @@ const AuthModel = (function () {
     return data.user;
   }
 
+  async function forgotPassword(email) {
+    return ApiModel.post("/auth/forgot-password", { email });
+  }
+
+  async function resetPassword(token, password) {
+    return ApiModel.post("/auth/reset-password", { token, password });
+  }
+
   function logout() {
     clearSession();
   }
@@ -55,6 +63,8 @@ const AuthModel = (function () {
   return {
     login,
     register,
+    forgotPassword,
+    resetPassword,
     logout,
     getToken,
     getUser,
