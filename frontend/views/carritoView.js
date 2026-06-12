@@ -63,7 +63,10 @@ const CarritoView = (function () {
       $items.append(
         '<div class="resumen-item">' +
           '<div><span class="resumen-item-cantidad">' + item.cantidad + '×</span> ' + item.nombre + '</div>' +
-          '<span class="resumen-item-precio">$' + (item.precio * item.cantidad).toFixed(2) + '</span>' +
+          '<div class="resumen-item-acciones">' +
+            '<span class="resumen-item-precio">$' + (item.precio * item.cantidad).toFixed(2) + '</span>' +
+            '<button type="button" class="btn-eliminar-resumen" data-id="' + item.productoId + '" aria-label="Eliminar ' + item.nombre + '">×</button>' +
+          '</div>' +
         '</div>'
       );
     });

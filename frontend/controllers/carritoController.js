@@ -30,6 +30,13 @@ const CarritoController = (function () {
       }
     });
 
+    $(document).on("click", ".btn-eliminar-resumen", function () {
+      const id = parseInt($(this).data("id"), 10);
+      CarritoModel.eliminar(id);
+      CarritoView.renderDrawer();
+      CarritoView.renderResumenPedir();
+    });
+
     $(document).on("keydown", function (e) {
       if (e.key === "Escape" && $("#drawer-carrito").hasClass("abierto")) {
         CarritoView.cerrarDrawer();

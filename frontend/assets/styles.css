@@ -632,7 +632,13 @@ h1, h2, h3, h4 {
 
 .resumen-item-nombre { color: var(--cafe-medio); }
 .resumen-item-cantidad { color: var(--cafe-claro); margin-right: 10px; }
+.resumen-item-acciones { display: flex; align-items: center; gap: 8px; }
 .resumen-item-precio { font-weight: 700; color: var(--naranja); }
+.btn-eliminar-resumen {
+  background: none; border: none; color: var(--rojo); font-size: 1.3rem;
+  cursor: pointer; line-height: 1; padding: 0 2px;
+}
+.btn-eliminar-resumen:hover { color: #c0392b; }
 
 .resumen-totales { margin-top: 16px; }
 
