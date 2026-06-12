@@ -20,11 +20,14 @@ const AdminView = (function () {
     $tbody.empty();
 
     if (!productos.length) {
-      $tbody.html('<tr><td colspan="6" class="mensaje-vacio">Sin productos</td></tr>');
+      $tbody.html('<tr><td colspan="7" class="mensaje-vacio">Sin productos</td></tr>');
       return;
     }
 
+    var badgeMap = { activo: "badge-ok", inactivo: "badge-error" };
+
     productos.forEach(function (p) {
+      var badgeCls = badgeMap[p.estado] || "badge-aml";
       $tbody.append(
         '<tr>' +
           '<td>' + p.id + '</td>' +
@@ -32,6 +35,7 @@ const AdminView = (function () {
           '<td>' + (p.categoria || "—") + '</td>' +
           '<td>$' + p.precio.toFixed(2) + '</td>' +
           '<td>' + p.stock + '</td>' +
+          '<td><span class="pedido-estado ' + badgeCls + '">' + (p.estado || "activo").toUpperCase() + '</span></td>' +
           '<td class="admin-acciones">' +
             '<button type="button" class="btn btn-secundario btn-sm btn-editar-producto" data-id="' + p.id + '">Editar</button> ' +
             '<button type="button" class="btn btn-peligro btn-sm btn-eliminar-producto" data-id="' + p.id + '">Eliminar</button>' +

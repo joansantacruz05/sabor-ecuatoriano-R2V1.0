@@ -42,5 +42,6 @@ router.post("/login", loginRules, handleValidation, authController.login);
 router.post("/forgot-password", forgotRules, handleValidation, authController.forgotPassword);
 router.post("/reset-password", resetRules, handleValidation, authController.resetPassword);
 router.get("/me", authenticate, authController.me);
+router.put("/profile", authenticate, authController.updateProfile);
 
 module.exports = router;

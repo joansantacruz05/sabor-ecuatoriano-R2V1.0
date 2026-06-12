@@ -45,7 +45,8 @@ async function obtener(req, res, next) {
 async function crear(req, res, next) {
   try {
     await resolverCategoria(req.body);
-    const producto = await productoModel.createProducto(req.body);
+    const { imagen, ...productData } = req.body;
+    const producto = await productoModel.createProducto(productData, imagen || null);
     logger.info("Producto creado", { productoId: producto.id });
     res.status(201).json({ success: true, data: producto });
   } catch (err) {
@@ -63,7 +64,8 @@ async function actualizar(req, res, next) {
     }
 
     await resolverCategoria(req.body);
-    const producto = await productoModel.updateProducto(id, req.body);
+    const { imagen, ...productData } = req.body;
+    const producto = await productoModel.updateProducto(id, productData, imagen || null);
     logger.info("Producto actualizado", { productoId: id });
     res.json({ success: true, data: producto });
   } catch (err) {

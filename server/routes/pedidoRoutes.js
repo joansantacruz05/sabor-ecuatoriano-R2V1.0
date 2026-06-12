@@ -10,11 +10,18 @@ const crearPedidoRules = [
   body("items").isArray({ min: 1 }).withMessage("Debe enviar al menos un ítem"),
   body("items.*.productoId").isInt({ min: 1 }).withMessage("productoId inválido"),
   body("items.*.cantidad").isInt({ min: 1 }).withMessage("cantidad inválida"),
-  body("items.*.precioUnitario").isFloat({ min: 0.01 }).withMessage("precioUnitario inválido")
+  body("items.*.precioUnitario").isFloat({ min: 0.01 }).withMessage("precioUnitario inválido"),
+  body("metodoPagoId").optional().isInt({ min: 1 }).withMessage("metodoPagoId inválido")
 ];
 
 router.post("/", authenticate, authorize("user", "admin"), crearPedidoRules, handleValidation, pedidoController.crear);
 router.get("/mis-pedidos", authenticate, authorize("user", "admin"), pedidoController.misPedidos);
+router.get("/metodos-pago", pedidoController.listarMetodosPago);
+router.get("/reportes", authenticate, authorize("admin"), pedidoController.reportes);
 router.get("/", authenticate, authorize("admin"), pedidoController.listarTodos);
+router.put("/:id/estado", authenticate, authorize("admin"), pedidoController.aprobar);
+router.post("/:id/anular", authenticate, authorize("admin"), pedidoController.anular);
+router.get("/:id/factura", authenticate, authorize("user", "admin"), pedidoController.obtenerFactura);
+router.get("/:id/factura/pdf", authenticate, authorize("user", "admin"), pedidoController.descargarFacturaPdf);
 
 module.exports = router;

@@ -42,8 +42,13 @@ const AuthModel = (function () {
     return data.user;
   }
 
-  async function register(username, email, password) {
-    const data = await ApiModel.post("/auth/register", { username, email, password });
+  async function register(username, email, password, nombreCompleto, direccion, ciudad, telefono) {
+    const body = { username, email, password };
+    if (nombreCompleto) body.nombreCompleto = nombreCompleto;
+    if (direccion) body.direccion = direccion;
+    if (ciudad) body.ciudad = ciudad;
+    if (telefono) body.telefono = telefono;
+    const data = await ApiModel.post("/auth/register", body);
     saveSession(data.token, data.user);
     return data.user;
   }

@@ -14,7 +14,7 @@ function signToken(user) {
 
 async function register(req, res, next) {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, nombreCompleto, direccion, telefono, ciudad } = req.body;
 
     const existingEmail = await usuarioModel.findByEmail(email);
     if (existingEmail) {
@@ -31,7 +31,11 @@ async function register(req, res, next) {
       username,
       email,
       passwordHash,
-      rolId: 2
+      rolId: 2,
+      nombreCompleto: nombreCompleto || null,
+      direccion: direccion || null,
+      telefono: telefono || null,
+      ciudad: ciudad || null
     });
 
     const token = signToken(usuario);
@@ -67,7 +71,11 @@ async function login(req, res, next) {
       id: usuario.id,
       username: usuario.username,
       email: usuario.email,
-      role: usuario.role
+      role: usuario.role,
+      nombreCompleto: usuario.nombreCompleto,
+      direccion: usuario.direccion,
+      telefono: usuario.telefono,
+      ciudad: usuario.ciudad
     };
 
     logger.info("Login exitoso", { userId: usuario.id });
@@ -138,4 +146,20 @@ async function resetPassword(req, res, next) {
   }
 }
 
-module.exports = { register, login, me, forgotPassword, resetPassword };
+async function updateProfile(req, res, next) {
+  try {
+    const { nombreCompleto, direccion, telefono, ciudad } = req.body;
+    const usuario = await usuarioModel.updateUsuario(req.user.id, {
+      nombreCompleto: nombreCompleto || null,
+      direccion: direccion || null,
+      telefono: telefono || null,
+      ciudad: ciudad || null
+    });
+
+    res.json({ success: true, message: "Perfil actualizado", user: usuario });
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = { register, login, me, forgotPassword, resetPassword, updateProfile };

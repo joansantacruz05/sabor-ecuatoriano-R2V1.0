@@ -46,8 +46,25 @@
       </p>
     </div>
     <div class="pedir-grid">
+      <div class="pedir-direccion">
+        <h3>Dirección de envío</h3>
+        <div id="direccion-form">
+          <div class="campo"><label for="pedir-nombre">Nombre completo</label><input id="pedir-nombre" pattern="[A-Za-zÀ-ÿ\s]+" title="Solo letras y espacios" /><span id="pedir-nombre-feedback" class="feedback-inline"></span></div>
+          <div class="campo"><label for="pedir-direccion">Dirección</label><input id="pedir-direccion" /><span class="feedback-inline"></span></div>
+          <div class="campo"><label for="pedir-ciudad">Ciudad</label><input id="pedir-ciudad" pattern="[A-Za-zÀ-ÿ\s]+" title="Solo letras y espacios" /><span id="pedir-ciudad-feedback" class="feedback-inline"></span></div>
+          <div class="campo"><label for="pedir-telefono">Teléfono</label><input id="pedir-telefono" type="tel" maxlength="10" pattern="[0-9]*" title="Solo dígitos, máximo 10" /><span id="pedir-telefono-feedback" class="feedback-inline"></span></div>
+          <button type="button" class="btn btn-secundario btn-sm" id="btn-guardar-direccion">Guardar dirección</button>
+          <div id="direccion-feedback" class="feedback" aria-live="polite"></div>
+        </div>
+      </div>
       <div class="pedir-resumen">
         <h3>Resumen</h3>
+        <div class="campo">
+          <label for="pedir-metodo-pago">Método de pago</label>
+          <select id="pedir-metodo-pago" class="select-metodo-pago">
+            <option value="">Selecciona un método</option>
+          </select>
+        </div>
         <div id="resumen-items"></div>
         <div class="resumen-totales" id="resumen-totales" hidden>
           <div class="linea-total"><span>Subtotal</span><span>$<span id="resumen-subtotal">0.00</span></span></div>
@@ -99,6 +116,7 @@
     <button type="button" class="btn btn-dorado" id="btn-cerrar-exito">Aceptar</button>
   </div>
 
+  <script src="./utils/sanitize.js"></script>
   <script src="./models/api.js"></script>
   <script src="./models/authModel.js"></script>
   <script src="./models/carritoModel.js"></script>
@@ -110,6 +128,6 @@
   <script src="./controllers/pedidoController.js"></script>
   <script src="./controllers/authController.js"></script>
   <script src="./controllers/appController.js"></script>
-  <script>$(function () { PedidoController.init(); CarritoView.renderResumenPedir(); });</script>
+  <script>$(function () { PedidoController.init(); CarritoView.renderResumenPedir(); Sanitize.aplicarGlobal(); });</script>
 </body>
 </html>

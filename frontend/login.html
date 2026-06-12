@@ -42,11 +42,11 @@
       <form id="form-login" novalidate>
         <div class="campo">
           <label for="login-email">Correo electrónico</label>
-          <input id="login-email" type="email" required autocomplete="email" />
+          <input id="login-email" type="email" required autocomplete="email" /><span class="feedback-inline"></span>
         </div>
         <div class="campo">
           <label for="login-password">Contraseña</label>
-          <input id="login-password" type="password" required autocomplete="current-password" minlength="8" />
+          <input id="login-password" type="password" required autocomplete="current-password" minlength="8" /><span class="feedback-inline"></span>
         </div>
         <small class="error-mensaje" id="error-login" aria-live="assertive"></small>
         <button type="submit" class="btn btn-primario">Entrar</button>
@@ -57,16 +57,23 @@
       <form id="form-register" novalidate hidden>
         <div class="campo">
           <label for="register-username">Usuario</label>
-          <input id="register-username" type="text" required minlength="3" maxlength="50" />
+          <input id="register-username" type="text" required minlength="3" maxlength="50" /><span class="feedback-inline"></span>
         </div>
         <div class="campo">
           <label for="register-email">Correo</label>
-          <input id="register-email" type="email" required autocomplete="email" />
+          <input id="register-email" type="email" required autocomplete="email" /><span class="feedback-inline"></span>
         </div>
         <div class="campo">
           <label for="register-password">Contraseña</label>
-          <input id="register-password" type="password" required minlength="8" autocomplete="new-password" />
+          <input id="register-password" type="password" required minlength="8" autocomplete="new-password" /><span class="feedback-inline"></span>
         </div>
+        <details class="register-detalles">
+          <summary>Datos de envío (opcional)</summary>
+          <div class="campo"><label for="register-nombre">Nombre completo</label><input id="register-nombre" /><span class="feedback-inline"></span></div>
+          <div class="campo"><label for="register-direccion">Dirección</label><input id="register-direccion" /><span class="feedback-inline"></span></div>
+          <div class="campo"><label for="register-ciudad">Ciudad</label><input id="register-ciudad" /><span class="feedback-inline"></span></div>
+          <div class="campo"><label for="register-telefono">Teléfono</label><input id="register-telefono" /><span class="feedback-inline"></span></div>
+        </details>
         <small class="error-mensaje" id="error-register" aria-live="assertive"></small>
         <button type="submit" class="btn btn-primario">Crear cuenta</button>
         <p class="auth-switch">¿Ya tienes cuenta? <button type="button" class="link-btn" id="btn-mostrar-login">Inicia sesión</button></p>
@@ -74,7 +81,7 @@
       <form id="form-forgot" novalidate hidden>
         <div class="campo">
           <label for="forgot-email">Correo electrónico</label>
-          <input id="forgot-email" type="email" required autocomplete="email" />
+          <input id="forgot-email" type="email" required autocomplete="email" /><span class="feedback-inline"></span>
         </div>
         <small class="error-mensaje" id="error-forgot" aria-live="assertive"></small>
         <small class="exito-mensaje" id="exito-forgot" hidden aria-live="polite"></small>
@@ -85,15 +92,15 @@
         <hr>
         <div class="campo">
           <label for="reset-email">Correo electrónico</label>
-          <input id="reset-email" type="email" readonly />
+          <input id="reset-email" type="email" readonly /><span class="feedback-inline"></span>
         </div>
         <div class="campo">
           <label for="reset-password">Nueva contraseña</label>
-          <input id="reset-password" type="password" required minlength="8" autocomplete="new-password" />
+          <input id="reset-password" type="password" required minlength="8" autocomplete="new-password" /><span class="feedback-inline"></span>
         </div>
         <div class="campo">
           <label for="reset-confirm">Confirmar contraseña</label>
-          <input id="reset-confirm" type="password" required minlength="8" />
+          <input id="reset-confirm" type="password" required minlength="8" /><span class="feedback-inline"></span>
         </div>
         <small class="error-mensaje" id="error-reset" aria-live="assertive"></small>
         <button type="submit" class="btn btn-primario">Restablecer contraseña</button>
@@ -142,6 +149,7 @@
     <button type="button" class="btn btn-dorado" id="btn-cerrar-exito">Aceptar</button>
   </div>
 
+  <script src="./utils/sanitize.js"></script>
   <script src="./models/api.js"></script>
   <script src="./models/authModel.js"></script>
   <script src="./models/carritoModel.js"></script>
@@ -151,5 +159,6 @@
   <script src="./controllers/carritoController.js"></script>
   <script src="./controllers/authController.js"></script>
   <script src="./controllers/appController.js"></script>
+  <script>$(function () { Sanitize.aplicarGlobal(); });</script>
 </body>
 </html>

@@ -81,23 +81,41 @@ async function main() {
     }
   });
 
+  const metodosPago = ["efectivo", "tarjeta credito", "tarjeta debito", "transferencia", "paypal"];
+  const metodosPagoMap = {};
+  for (const nombre of metodosPago) {
+    const mp = await prisma.metodoPago.upsert({
+      where: { nombre },
+      update: {},
+      create: { nombre }
+    });
+    metodosPagoMap[nombre] = mp.id;
+  }
+
+  await prisma.factura.deleteMany();
   await prisma.pedidoDetalle.deleteMany();
   await prisma.pedido.deleteMany();
+  await prisma.imagen.deleteMany();
   await prisma.producto.deleteMany();
 
-  const productosConCategoria = productos.map(function (p) {
-    return {
-      nombre: p.nombre,
-      precio: p.precio,
-      stock: p.stock,
-      descripcion: p.descripcion,
-      imagen: p.imagen,
-      categoriaId: categoriasMap[p.categoria]
-    };
-  });
-  await prisma.producto.createMany({ data: productosConCategoria });
+  const createdProducts = [];
+  for (const p of productos) {
+    const prod = await prisma.producto.create({
+      data: {
+        nombre: p.nombre,
+        precio: p.precio,
+        stock: p.stock,
+        descripcion: p.descripcion,
+        categoriaId: categoriasMap[p.categoria],
+        imagenes: {
+          create: { url: p.imagen, orden: 0 }
+        }
+      }
+    });
+    createdProducts.push(prod);
+  }
 
-  console.log("Seed completado: roles, categorías, usuarios y catálogo inicial.");
+  console.log("Seed completado: " + createdProducts.length + " productos con imágenes.");
 }
 
 main()

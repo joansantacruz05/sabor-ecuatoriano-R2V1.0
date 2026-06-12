@@ -2,7 +2,7 @@ const prisma = require("./prismaClient");
 
 const baseSelect = {
   id: true, username: true, email: true, createdAt: true,
-  rolId: true,
+  rolId: true, nombreCompleto: true, direccion: true, telefono: true, ciudad: true, estado: true,
   rol: { select: { nombre: true } }
 };
 
@@ -36,9 +36,18 @@ async function findById(id) {
   return mapUsuario(u);
 }
 
-async function createUsuario({ username, email, passwordHash, rolId }) {
+async function createUsuario(data) {
   const u = await prisma.usuario.create({
-    data: { username, email, passwordHash, rolId },
+    data,
+    select: baseSelect
+  });
+  return mapUsuario(u);
+}
+
+async function updateUsuario(id, data) {
+  const u = await prisma.usuario.update({
+    where: { id },
+    data,
     select: baseSelect
   });
   return mapUsuario(u);
@@ -73,6 +82,7 @@ module.exports = {
   findByUsername,
   findById,
   createUsuario,
+  updateUsuario,
   setResetToken,
   findByResetToken,
   updatePassword

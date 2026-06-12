@@ -12,7 +12,7 @@ const productoRules = [
   body("stock").isInt({ min: 0 }).withMessage("Stock inválido"),
   body("categoria").optional().trim().escape().isLength({ max: 50 }),
   body("descripcion").optional().trim().escape().isLength({ max: 500 }),
-  body("imagen").optional().trim().isURL().withMessage("URL de imagen inválida")
+  body("imagen").optional({ values: "falsy" }).trim()
 ];
 
 const idParam = [param("id").isInt({ min: 1 }).withMessage("ID inválido")];

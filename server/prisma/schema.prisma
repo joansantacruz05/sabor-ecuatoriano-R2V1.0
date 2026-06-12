@@ -34,10 +34,16 @@ model Usuario {
   passwordHash      String    @map("password_hash") @db.VarChar(255)
   rolId             Int       @default(2) @map("rol_id")
   rol               Rol       @relation(fields: [rolId], references: [id])
+  nombreCompleto    String?   @map("nombre_completo") @db.VarChar(100)
+  direccion         String?   @db.VarChar(255)
+  telefono          String?   @db.VarChar(20)
+  ciudad            String?   @db.VarChar(100)
+  estado            String    @default("activo") @db.VarChar(20)
   resetToken        String?   @unique @map("reset_token") @db.VarChar(255)
   resetTokenExpiry  DateTime? @map("reset_token_expiry")
   createdAt         DateTime  @default(now()) @map("created_at")
   pedidos           Pedido[]
+  facturas          Factura[]
 
   @@map("usuario")
   @@schema("sabor_ecuatoriano")
@@ -51,23 +57,86 @@ model Producto {
   categoriaId Int?            @map("categoria_id")
   categoria   Categoria?      @relation(fields: [categoriaId], references: [id])
   descripcion String?         @db.VarChar(500)
-  imagen      String?         @db.VarChar(500)
+  estado      String          @default("activo") @db.VarChar(20)
   createdAt   DateTime        @default(now()) @map("created_at")
+  imagenes    Imagen[]
   detalles    PedidoDetalle[]
 
   @@map("producto")
   @@schema("sabor_ecuatoriano")
 }
 
+model Imagen {
+  id        Int      @id @default(autoincrement())
+  url       String   @db.Text
+  orden     Int      @default(0)
+  productoId Int     @map("producto_id")
+  producto  Producto @relation(fields: [productoId], references: [id], onDelete: Cascade)
+
+  @@map("imagen")
+  @@schema("sabor_ecuatoriano")
+}
+
 model Pedido {
-  id        Int             @id @default(autoincrement())
-  userId    Int             @map("user_id")
-  total     Float
-  createdAt DateTime        @default(now()) @map("created_at")
-  usuario   Usuario         @relation(fields: [userId], references: [id])
-  detalles  PedidoDetalle[]
+  id            Int             @id @default(autoincrement())
+  userId        Int             @map("user_id")
+  total         Float
+  estado        String          @default("pendiente") @db.VarChar(20)
+  metodoPagoId  Int?            @map("metodo_pago_id")
+  metodoPago    MetodoPago?     @relation(fields: [metodoPagoId], references: [id])
+  createdAt     DateTime        @default(now()) @map("created_at")
+  updatedAt     DateTime?       @updatedAt @map("updated_at")
+  usuario       Usuario         @relation(fields: [userId], references: [id])
+  detalles      PedidoDetalle[]
+  factura       Factura?
 
   @@map("pedido")
+  @@schema("sabor_ecuatoriano")
+}
+
+model MetodoPago {
+  id        Int       @id @default(autoincrement())
+  nombre    String    @unique @db.VarChar(30)
+  facturas  Factura[]
+  pedidos   Pedido[]
+
+  @@map("metodo_pago")
+  @@schema("sabor_ecuatoriano")
+}
+
+model Factura {
+  id              Int       @id @default(autoincrement())
+  pedidoId        Int       @unique @map("pedido_id")
+  pedido          Pedido    @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+  numeroFactura   String    @unique @map("numero_factura") @db.VarChar(50)
+
+  ruc             String    @default("1792876543001") @db.VarChar(13)
+  razonSocial     String    @default("Sabor Ecuatoriano Cía. Ltda.") @map("razon_social") @db.VarChar(200)
+  direccionNegocio String   @default("Av. República y Amazonas, Quito - Ecuador") @map("direccion_negocio") @db.VarChar(255)
+  telefonoNegocio String    @default("+593 2 255 6789") @map("telefono_negocio") @db.VarChar(20)
+  emailNegocio    String    @default("facturacion@saborecuatoriano.ec") @map("email_negocio") @db.VarChar(100)
+
+  metodoPagoId    Int       @map("metodo_pago_id")
+  metodoPago      MetodoPago @relation(fields: [metodoPagoId], references: [id])
+  formaPago       String    @default("contado") @map("forma_pago") @db.VarChar(30)
+  moneda          String    @default("USD") @db.VarChar(5)
+  observaciones   String?   @db.VarChar(500)
+
+  subtotal        Float
+  descuento       Float     @default(0)
+  subtotalIva     Float     @map("subtotal_iva")
+  iva             Float
+  total           Float
+  estado          String    @default("pendiente") @db.VarChar(20)
+  fechaPago       DateTime? @map("fecha_pago")
+
+  createdAt       DateTime  @default(now()) @map("created_at")
+  fechaVencimiento DateTime? @map("fecha_vencimiento")
+
+  usuarioId       Int       @map("user_id")
+  usuario         Usuario   @relation(fields: [usuarioId], references: [id])
+
+  @@map("factura")
   @@schema("sabor_ecuatoriano")
 }
 

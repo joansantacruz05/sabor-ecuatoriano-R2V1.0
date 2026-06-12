@@ -31,6 +31,11 @@ const AuthController = (function () {
       const email = $("#login-email").val().trim();
       const password = $("#login-password").val();
 
+      if (Sanitize.validar(email)) {
+        AuthView.mostrarErrorLogin("Correo inv\u00e1lido");
+        return;
+      }
+
       try {
         const user = await AuthModel.login(email, password);
         UiView.actualizarNavUsuario(user);
@@ -51,9 +56,19 @@ const AuthController = (function () {
       const username = $("#register-username").val().trim();
       const email = $("#register-email").val().trim();
       const password = $("#register-password").val();
+      const nombreCompleto = $("#register-nombre").val().trim() || undefined;
+      const direccion = $("#register-direccion").val().trim() || undefined;
+      const ciudad = $("#register-ciudad").val().trim() || undefined;
+      const telefono = $("#register-telefono").val().trim() || undefined;
+
+      var peligro = Sanitize.validar(username) || Sanitize.validar(email) || Sanitize.validar(nombreCompleto) || Sanitize.validar(direccion) || Sanitize.validar(ciudad) || Sanitize.validar(telefono);
+      if (peligro) {
+        AuthView.mostrarErrorRegister(peligro);
+        return;
+      }
 
       try {
-        const user = await AuthModel.register(username, email, password);
+        const user = await AuthModel.register(username, email, password, nombreCompleto, direccion, ciudad, telefono);
         UiView.actualizarNavUsuario(user);
         if (typeof PedidoController !== "undefined") {
           PedidoController.actualizarAvisoLogin();
@@ -70,6 +85,11 @@ const AuthController = (function () {
       AuthView.limpiarErrores();
 
       const email = $("#forgot-email").val().trim();
+
+      if (Sanitize.validar(email)) {
+        AuthView.mostrarErrorForgot("Correo inv\u00e1lido");
+        return;
+      }
 
       try {
         await AuthModel.forgotPassword(email);
@@ -89,6 +109,11 @@ const AuthController = (function () {
       const email = $("#reset-email").val().trim();
       const password = $("#reset-password").val();
       const confirm = $("#reset-confirm").val();
+
+      if (Sanitize.validar(email)) {
+        AuthView.mostrarErrorReset("Correo inv\u00e1lido");
+        return;
+      }
 
       if (!email || password.length < 8) {
         AuthView.mostrarErrorReset("La contraseña debe tener al menos 8 caracteres.");
