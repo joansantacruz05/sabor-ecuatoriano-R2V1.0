@@ -84,12 +84,16 @@
       <form id="form-reset" novalidate hidden>
         <hr>
         <div class="campo">
-          <label for="reset-token">Token de recuperación</label>
-          <input id="reset-token" type="text" readonly />
+          <label for="reset-email">Correo electrónico</label>
+          <input id="reset-email" type="email" readonly />
         </div>
         <div class="campo">
           <label for="reset-password">Nueva contraseña</label>
           <input id="reset-password" type="password" required minlength="8" autocomplete="new-password" />
+        </div>
+        <div class="campo">
+          <label for="reset-confirm">Confirmar contraseña</label>
+          <input id="reset-confirm" type="password" required minlength="8" />
         </div>
         <small class="error-mensaje" id="error-reset" aria-live="assertive"></small>
         <button type="submit" class="btn btn-primario">Restablecer contraseña</button>

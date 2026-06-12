@@ -52,8 +52,8 @@ const AuthModel = (function () {
     return ApiModel.post("/auth/forgot-password", { email });
   }
 
-  async function resetPassword(token, password) {
-    return ApiModel.post("/auth/reset-password", { token, password });
+  async function resetPassword(email, password) {
+    return ApiModel.post("/auth/reset-password", { email, password });
   }
 
   function logout() {

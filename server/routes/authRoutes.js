@@ -33,7 +33,7 @@ const forgotRules = [
 ];
 
 const resetRules = [
-  body("token").notEmpty().withMessage("Token requerido"),
+  body("email").trim().normalizeEmail().isEmail().withMessage("Correo inválido"),
   body("password").isLength({ min: 8, max: 100 }).withMessage("La contraseña debe tener al menos 8 caracteres")
 ];
 

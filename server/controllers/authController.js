@@ -121,10 +121,10 @@ async function forgotPassword(req, res, next) {
 
 async function resetPassword(req, res, next) {
   try {
-    const { token, password } = req.body;
-    const usuario = await usuarioModel.findByResetToken(token);
+    const { email, password } = req.body;
+    const usuario = await usuarioModel.findByEmail(email);
     if (!usuario || !usuario.resetTokenExpiry || usuario.resetTokenExpiry < new Date()) {
-      return res.status(400).json({ success: false, message: "Token inválido o expirado." });
+      return res.status(400).json({ success: false, message: "No has solicitado recuperación o el enlace expiró." });
     }
 
     const passwordHash = await bcrypt.hash(password, 12);

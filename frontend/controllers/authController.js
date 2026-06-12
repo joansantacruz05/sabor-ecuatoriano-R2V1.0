@@ -72,15 +72,11 @@ const AuthController = (function () {
       const email = $("#forgot-email").val().trim();
 
       try {
-        const data = await AuthModel.forgotPassword(email);
-        if (data.resetToken) {
-          AuthView.mostrarExitoForgot("Token generado. Ahora restablece tu contraseña.");
-          $("#form-forgot").attr("hidden", true);
-          $("#form-reset").removeAttr("hidden");
-          $("#reset-token").val(data.resetToken);
-        } else {
-          AuthView.mostrarExitoForgot(data.message);
-        }
+        await AuthModel.forgotPassword(email);
+        AuthView.mostrarExitoForgot("Si el correo existe, recibirás un enlace de recuperación.");
+        $("#form-forgot").attr("hidden", true);
+        $("#reset-email").val(email);
+        $("#form-reset").removeAttr("hidden");
       } catch (err) {
         AuthView.mostrarErrorForgot(err.message || "Error al solicitar recuperación");
       }
@@ -90,16 +86,22 @@ const AuthController = (function () {
       e.preventDefault();
       AuthView.limpiarErrores();
 
-      const token = $("#reset-token").val().trim();
+      const email = $("#reset-email").val().trim();
       const password = $("#reset-password").val();
+      const confirm = $("#reset-confirm").val();
 
-      if (!token || password.length < 8) {
-        AuthView.mostrarErrorReset("Token inválido o contraseña muy corta.");
+      if (!email || password.length < 8) {
+        AuthView.mostrarErrorReset("La contraseña debe tener al menos 8 caracteres.");
+        return;
+      }
+
+      if (password !== confirm) {
+        AuthView.mostrarErrorReset("Las contraseñas no coinciden.");
         return;
       }
 
       try {
-        await AuthModel.resetPassword(token, password);
+        await AuthModel.resetPassword(email, password);
         UiView.mostrarAlerta("Contraseña actualizada. Inicia sesión.", "ok");
         AuthView.cambiarModoAuth("login");
       } catch (err) {
