@@ -22,6 +22,11 @@ const CatalogoController = (function () {
     });
 
     $(document).on("click", ".btn-anadir", function () {
+      if (!AuthModel.isLoggedIn()) {
+        UiView.abrirModal("modal-login");
+        return;
+      }
+
       const id = parseInt($(this).data("id"), 10);
       const producto = productos.find(function (p) { return p.id === id; });
       if (!producto) return;
@@ -35,6 +40,10 @@ const CatalogoController = (function () {
       CarritoView.renderDrawer();
       CarritoView.renderResumenPedir();
       UiView.mostrarAlerta(producto.nombre + " añadido al carrito.", "ok");
+    });
+
+    $(document).on("click", "#btn-cerrar-login, #modal-login-overlay", function () {
+      UiView.cerrarModal("modal-login");
     });
   }
 

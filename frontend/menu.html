@@ -95,6 +95,16 @@
     <button type="button" class="btn btn-dorado" id="btn-cerrar-exito">Aceptar</button>
   </div>
 
+  <div class="modal-overlay" id="modal-login-overlay" hidden></div>
+  <div class="modal-exito" id="modal-login" role="dialog" aria-labelledby="login-titulo" aria-modal="true" aria-hidden="true" hidden>
+    <h2 id="login-titulo">Inicia sesión</h2>
+    <p>Debes iniciar sesión o registrarte para añadir productos al carrito.</p>
+    <div class="modal-acciones">
+      <a href="login.html" class="btn btn-dorado">Iniciar sesión</a>
+      <button type="button" class="btn btn-secundario" id="btn-cerrar-login">Cancelar</button>
+    </div>
+  </div>
+
   <script src="./models/api.js"></script>
   <script src="./models/authModel.js"></script>
   <script src="./models/carritoModel.js"></script>
