@@ -1,6 +1,20 @@
 const AdminView = (function () {
   "use strict";
 
+  async function cargarCategorias() {
+    const $sel = $("#admin-categoria");
+    try {
+      const res = await ApiModel.get("/categorias");
+      const categorias = res.data || [];
+      $sel.find("option:not([value=''])").remove();
+      categorias.forEach(function (c) {
+        $sel.append('<option value="' + c.nombre + '">' + c.nombre + '</option>');
+      });
+    } catch (e) {
+      console.warn("No se pudieron cargar categorías", e);
+    }
+  }
+
   function renderTabla(productos) {
     const $tbody = $("#admin-productos-body");
     $tbody.empty();
@@ -43,5 +57,5 @@ const AdminView = (function () {
     $fb.removeClass("ok error").addClass(esError ? "error" : "ok").text(msg).attr("role", "alert");
   }
 
-  return { renderTabla, llenarFormulario, mostrarFeedback };
+  return { cargarCategorias, renderTabla, llenarFormulario, mostrarFeedback };
 })();

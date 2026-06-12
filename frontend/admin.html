@@ -61,7 +61,7 @@
         <h3 id="admin-form-titulo">Nuevo producto</h3>
         <input type="hidden" id="admin-producto-id" />
         <div class="campo"><label for="admin-nombre">Nombre</label><input id="admin-nombre" required /></div>
-        <div class="campo"><label for="admin-categoria">Categoría</label><input id="admin-categoria" /></div>
+        <div class="campo"><label for="admin-categoria">Categoría</label><select id="admin-categoria"><option value="">—</option></select></div>
         <div class="campo"><label for="admin-precio">Precio</label><input id="admin-precio" type="number" step="0.01" min="0.01" required /></div>
         <div class="campo"><label for="admin-stock">Stock</label><input id="admin-stock" type="number" min="0" required /></div>
         <div class="campo"><label for="admin-descripcion">Descripción</label><textarea id="admin-descripcion" rows="3"></textarea></div>
@@ -133,6 +133,7 @@
   <script src="./controllers/appController.js"></script>
   <script>$(function () {
     if (!AuthModel.isAdmin()) { window.location.href = "inicio.html"; return; }
+    AdminView.cargarCategorias();
     AdminController.cargarProductos();
     PedidoController.cargarTodosPedidos();
     AdminView.llenarFormulario(null);

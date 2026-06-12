@@ -1,25 +1,47 @@
 const prisma = require("./prismaClient");
 
+const baseSelect = {
+  id: true, username: true, email: true, createdAt: true,
+  rolId: true,
+  rol: { select: { nombre: true } }
+};
+
+function mapUsuario(u) {
+  if (!u) return null;
+  const { rol, ...rest } = u;
+  return { ...rest, role: rol.nombre };
+}
+
 async function findByEmail(email) {
-  return prisma.usuario.findUnique({ where: { email } });
+  const u = await prisma.usuario.findUnique({
+    where: { email },
+    include: { rol: { select: { nombre: true } } }
+  });
+  return mapUsuario(u);
 }
 
 async function findByUsername(username) {
-  return prisma.usuario.findUnique({ where: { username } });
+  const u = await prisma.usuario.findUnique({
+    where: { username },
+    include: { rol: { select: { nombre: true } } }
+  });
+  return mapUsuario(u);
 }
 
 async function findById(id) {
-  return prisma.usuario.findUnique({
+  const u = await prisma.usuario.findUnique({
     where: { id },
-    select: { id: true, username: true, email: true, role: true, createdAt: true }
+    select: baseSelect
   });
+  return mapUsuario(u);
 }
 
-async function createUsuario({ username, email, passwordHash, role }) {
-  return prisma.usuario.create({
-    data: { username, email, passwordHash, role },
-    select: { id: true, username: true, email: true, role: true, createdAt: true }
+async function createUsuario({ username, email, passwordHash, rolId }) {
+  const u = await prisma.usuario.create({
+    data: { username, email, passwordHash, rolId },
+    select: baseSelect
   });
+  return mapUsuario(u);
 }
 
 async function setResetToken(email, token, expiresAt) {
@@ -30,15 +52,20 @@ async function setResetToken(email, token, expiresAt) {
 }
 
 async function findByResetToken(token) {
-  return prisma.usuario.findUnique({ where: { resetToken: token } });
+  const u = await prisma.usuario.findUnique({
+    where: { resetToken: token },
+    include: { rol: { select: { nombre: true } } }
+  });
+  return mapUsuario(u);
 }
 
 async function updatePassword(id, passwordHash) {
-  return prisma.usuario.update({
+  const u = await prisma.usuario.update({
     where: { id },
     data: { passwordHash, resetToken: null, resetTokenExpiry: null },
-    select: { id: true, username: true, email: true, role: true, createdAt: true }
+    select: baseSelect
   });
+  return mapUsuario(u);
 }
 
 module.exports = {

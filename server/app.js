@@ -4,6 +4,7 @@ const { notFoundHandler, errorHandler } = require("./middleware/errorHandler");
 const authRoutes = require("./routes/authRoutes");
 const productoRoutes = require("./routes/productoRoutes");
 const pedidoRoutes = require("./routes/pedidoRoutes");
+const categoriaRoutes = require("./routes/categoriaRoutes");
 
 const path = require("path");
 const http = require("http");
@@ -46,6 +47,7 @@ app.get("/api/proxy-image", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/productos", productoRoutes);
 app.use("/api/pedidos", pedidoRoutes);
+app.use("/api/categorias", categoriaRoutes);
 
 app.use((req, res, next) => {
   if (req.path.startsWith("/api/")) {

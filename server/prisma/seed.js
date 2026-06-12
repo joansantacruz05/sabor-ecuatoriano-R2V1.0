@@ -37,6 +37,28 @@ async function main() {
   const adminHash = await bcrypt.hash("Admin123!", 12);
   const userHash = await bcrypt.hash("User12345", 12);
 
+  const rolAdmin = await prisma.rol.upsert({
+    where: { nombre: "admin" },
+    update: {},
+    create: { nombre: "admin" }
+  });
+  const rolUser = await prisma.rol.upsert({
+    where: { nombre: "user" },
+    update: {},
+    create: { nombre: "user" }
+  });
+
+  const nombresCategoria = [...new Set(productos.map(function (p) { return p.categoria; }))];
+  const categoriasMap = {};
+  for (const nombre of nombresCategoria) {
+    const cat = await prisma.categoria.upsert({
+      where: { nombre: nombre },
+      update: {},
+      create: { nombre: nombre }
+    });
+    categoriasMap[nombre] = cat.id;
+  }
+
   await prisma.usuario.upsert({
     where: { email: "admin@saborecuatoriano.ec" },
     update: {},
@@ -44,7 +66,7 @@ async function main() {
       username: "admin",
       email: "admin@saborecuatoriano.ec",
       passwordHash: adminHash,
-      role: "admin"
+      rolId: rolAdmin.id
     }
   });
 
@@ -55,19 +77,27 @@ async function main() {
       username: "usuario",
       email: "user@saborecuatoriano.ec",
       passwordHash: userHash,
-      role: "user"
+      rolId: rolUser.id
     }
   });
 
-  const count = await prisma.producto.count();
-  if (count > 0) {
-    await prisma.pedidoDetalle.deleteMany();
-    await prisma.pedido.deleteMany();
-    await prisma.producto.deleteMany();
-  }
-  await prisma.producto.createMany({ data: productos });
+  await prisma.pedidoDetalle.deleteMany();
+  await prisma.pedido.deleteMany();
+  await prisma.producto.deleteMany();
 
-  console.log("Seed completado: usuarios admin/user y catálogo inicial.");
+  const productosConCategoria = productos.map(function (p) {
+    return {
+      nombre: p.nombre,
+      precio: p.precio,
+      stock: p.stock,
+      descripcion: p.descripcion,
+      imagen: p.imagen,
+      categoriaId: categoriasMap[p.categoria]
+    };
+  });
+  await prisma.producto.createMany({ data: productosConCategoria });
+
+  console.log("Seed completado: roles, categorías, usuarios y catálogo inicial.");
 }
 
 main()

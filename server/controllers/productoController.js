@@ -1,5 +1,22 @@
+const prisma = require("../models/prismaClient");
 const productoModel = require("../models/productoModel");
 const logger = require("../logger");
+
+async function resolverCategoria(body) {
+  if (body.categoria !== undefined) {
+    const nombre = body.categoria;
+    if (nombre) {
+      const cat = await prisma.categoria.upsert({
+        where: { nombre: nombre },
+        update: {},
+        create: { nombre: nombre }
+      });
+      body.categoriaId = cat.id;
+    }
+    delete body.categoria;
+  }
+  return body;
+}
 
 async function listar(req, res, next) {
   try {
@@ -27,6 +44,7 @@ async function obtener(req, res, next) {
 
 async function crear(req, res, next) {
   try {
+    await resolverCategoria(req.body);
     const producto = await productoModel.createProducto(req.body);
     logger.info("Producto creado", { productoId: producto.id });
     res.status(201).json({ success: true, data: producto });
@@ -44,6 +62,7 @@ async function actualizar(req, res, next) {
       return res.status(404).json({ success: false, message: "Producto no encontrado" });
     }
 
+    await resolverCategoria(req.body);
     const producto = await productoModel.updateProducto(id, req.body);
     logger.info("Producto actualizado", { productoId: id });
     res.json({ success: true, data: producto });

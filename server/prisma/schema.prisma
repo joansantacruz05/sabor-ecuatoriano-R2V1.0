@@ -9,12 +9,31 @@ datasource db {
   schemas   = ["sabor_ecuatoriano"]
 }
 
+model Rol {
+  id       Int       @id @default(autoincrement())
+  nombre   String    @unique @db.VarChar(20)
+  usuarios Usuario[]
+
+  @@map("rol")
+  @@schema("sabor_ecuatoriano")
+}
+
+model Categoria {
+  id        Int        @id @default(autoincrement())
+  nombre    String     @unique @db.VarChar(50)
+  productos Producto[]
+
+  @@map("categoria")
+  @@schema("sabor_ecuatoriano")
+}
+
 model Usuario {
   id                Int       @id @default(autoincrement())
   username          String    @unique @db.VarChar(50)
   email             String    @unique @db.VarChar(100)
   passwordHash      String    @map("password_hash") @db.VarChar(255)
-  role              String    @default("user") @db.VarChar(20)
+  rolId             Int       @default(2) @map("rol_id")
+  rol               Rol       @relation(fields: [rolId], references: [id])
   resetToken        String?   @unique @map("reset_token") @db.VarChar(255)
   resetTokenExpiry  DateTime? @map("reset_token_expiry")
   createdAt         DateTime  @default(now()) @map("created_at")
@@ -29,7 +48,8 @@ model Producto {
   nombre      String          @db.VarChar(100)
   precio      Float
   stock       Int             @default(0)
-  categoria   String?         @db.VarChar(50)
+  categoriaId Int?            @map("categoria_id")
+  categoria   Categoria?      @relation(fields: [categoriaId], references: [id])
   descripcion String?         @db.VarChar(500)
   imagen      String?         @db.VarChar(500)
   createdAt   DateTime        @default(now()) @map("created_at")

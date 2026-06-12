@@ -31,7 +31,7 @@ async function register(req, res, next) {
       username,
       email,
       passwordHash,
-      role: "user"
+      rolId: 2
     });
 
     const token = signToken(usuario);

@@ -1,19 +1,42 @@
 const prisma = require("./prismaClient");
 
+function mapProducto(p) {
+  if (!p) return null;
+  const { categoria, ...rest } = p;
+  return { ...rest, categoria: categoria ? categoria.nombre : null };
+}
+
 async function findAll() {
-  return prisma.producto.findMany({ orderBy: { id: "asc" } });
+  const productos = await prisma.producto.findMany({
+    orderBy: { id: "asc" },
+    include: { categoria: { select: { nombre: true } } }
+  });
+  return productos.map(mapProducto);
 }
 
 async function findById(id) {
-  return prisma.producto.findUnique({ where: { id } });
+  const p = await prisma.producto.findUnique({
+    where: { id },
+    include: { categoria: { select: { nombre: true } } }
+  });
+  return mapProducto(p);
 }
 
 async function createProducto(data) {
-  return prisma.producto.create({ data });
+  const p = await prisma.producto.create({
+    data,
+    include: { categoria: { select: { nombre: true } } }
+  });
+  return mapProducto(p);
 }
 
 async function updateProducto(id, data) {
-  return prisma.producto.update({ where: { id }, data });
+  const p = await prisma.producto.update({
+    where: { id },
+    data,
+    include: { categoria: { select: { nombre: true } } }
+  });
+  return mapProducto(p);
 }
 
 async function deleteProducto(id) {
