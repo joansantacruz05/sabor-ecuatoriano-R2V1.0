@@ -35,6 +35,7 @@ model Usuario {
   rolId             Int       @default(2) @map("rol_id")
   rol               Rol       @relation(fields: [rolId], references: [id])
   nombreCompleto    String?   @map("nombre_completo") @db.VarChar(100)
+  cedula            String?   @db.VarChar(13)
   direccion         String?   @db.VarChar(255)
   telefono          String?   @db.VarChar(20)
   ciudad            String?   @db.VarChar(100)

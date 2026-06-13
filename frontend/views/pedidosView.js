@@ -44,6 +44,8 @@ const PedidosView = (function () {
         usuarioHtml =
           '<div class="pedido-cliente">' +
           "<p><strong>Cliente:</strong> " + pedido.usuario.username + " (" + pedido.usuario.email + ")</p>" +
+          (pedido.usuario.cedula ? "<p><strong>C\u00e9dula:</strong> " + pedido.usuario.cedula + "</p>" : "") +
+          (pedido.usuario.nombreCompleto ? "<p><strong>Nombre:</strong> " + pedido.usuario.nombreCompleto + "</p>" : "") +
           (pedido.usuario.direccion ? "<p><strong>Direccion:</strong> " + pedido.usuario.direccion + "</p>" : "") +
           (pedido.usuario.ciudad ? "<p><strong>Ciudad:</strong> " + pedido.usuario.ciudad + "</p>" : "") +
           (pedido.usuario.telefono ? "<p><strong>Telefono:</strong> " + pedido.usuario.telefono + "</p>" : "") +

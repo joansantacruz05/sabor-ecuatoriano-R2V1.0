@@ -14,7 +14,7 @@ function signToken(user) {
 
 async function register(req, res, next) {
   try {
-    const { username, email, password, nombreCompleto, direccion, telefono, ciudad } = req.body;
+    const { username, email, password, nombreCompleto, cedula, direccion, telefono, ciudad } = req.body;
 
     const existingEmail = await usuarioModel.findByEmail(email);
     if (existingEmail) {
@@ -33,6 +33,7 @@ async function register(req, res, next) {
       passwordHash,
       rolId: 2,
       nombreCompleto: nombreCompleto || null,
+      cedula: cedula || null,
       direccion: direccion || null,
       telefono: telefono || null,
       ciudad: ciudad || null
@@ -148,9 +149,10 @@ async function resetPassword(req, res, next) {
 
 async function updateProfile(req, res, next) {
   try {
-    const { nombreCompleto, direccion, telefono, ciudad } = req.body;
+    const { nombreCompleto, cedula, direccion, telefono, ciudad } = req.body;
     const usuario = await usuarioModel.updateUsuario(req.user.id, {
       nombreCompleto: nombreCompleto || null,
+      cedula: cedula || null,
       direccion: direccion || null,
       telefono: telefono || null,
       ciudad: ciudad || null

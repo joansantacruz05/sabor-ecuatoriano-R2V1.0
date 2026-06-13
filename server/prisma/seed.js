@@ -66,7 +66,9 @@ async function main() {
       username: "admin",
       email: "admin@saborecuatoriano.ec",
       passwordHash: adminHash,
-      rolId: rolAdmin.id
+      rolId: rolAdmin.id,
+      nombreCompleto: "Admin Principal",
+      cedula: "1234567890"
     }
   });
 
@@ -77,6 +79,8 @@ async function main() {
       username: "usuario",
       email: "user@saborecuatoriano.ec",
       passwordHash: userHash,
+      nombreCompleto: "Usuario Demo",
+      cedula: "0987654321",
       rolId: rolUser.id
     }
   });

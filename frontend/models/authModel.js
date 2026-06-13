@@ -42,9 +42,10 @@ const AuthModel = (function () {
     return data.user;
   }
 
-  async function register(username, email, password, nombreCompleto, direccion, ciudad, telefono) {
+  async function register(username, email, password, nombreCompleto, cedula, direccion, ciudad, telefono) {
     const body = { username, email, password };
     if (nombreCompleto) body.nombreCompleto = nombreCompleto;
+    if (cedula) body.cedula = cedula;
     if (direccion) body.direccion = direccion;
     if (ciudad) body.ciudad = ciudad;
     if (telefono) body.telefono = telefono;

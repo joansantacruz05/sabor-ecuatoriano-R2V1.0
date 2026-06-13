@@ -2,7 +2,7 @@ const prisma = require("./prismaClient");
 
 const baseSelect = {
   id: true, username: true, email: true, createdAt: true,
-  rolId: true, nombreCompleto: true, direccion: true, telefono: true, ciudad: true, estado: true,
+  rolId: true, nombreCompleto: true, cedula: true, direccion: true, telefono: true, ciudad: true, estado: true,
   rol: { select: { nombre: true } }
 };
 

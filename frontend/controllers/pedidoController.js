@@ -74,6 +74,7 @@ const PedidoController = (function () {
     var user = AuthModel.getUser();
     if (user) {
       $("#pedir-nombre").val(user.nombreCompleto || "");
+      $("#pedir-cedula").val(user.cedula || "");
       $("#pedir-direccion").val(user.direccion || "");
       $("#pedir-ciudad").val(user.ciudad || "");
       $("#pedir-telefono").val(user.telefono || "");
@@ -96,12 +97,22 @@ const PedidoController = (function () {
     }
 
     var nombreCompleto = $("#pedir-nombre").val().trim();
+    var cedula = $("#pedir-cedula").val().trim();
     var direccion = $("#pedir-direccion").val().trim();
     var ciudad = $("#pedir-ciudad").val().trim();
     var telefono = $("#pedir-telefono").val().trim();
 
     if (!validarCampoTexto(nombreCompleto, "pedir-nombre")) return;
     if (!validarCampoTexto(ciudad, "pedir-ciudad")) return;
+
+    if (cedula && /[^0-9]/.test(cedula)) {
+      $("#pedir-cedula-feedback").text("Solo se permiten d\u00edgitos.").addClass("error");
+      return;
+    }
+    if (cedula.length > 13) {
+      $("#pedir-cedula-feedback").text("M\u00e1ximo 13 d\u00edgitos.").addClass("error");
+      return;
+    }
 
     var peligro = Sanitize.validar(direccion);
     if (peligro) {
@@ -120,6 +131,7 @@ const PedidoController = (function () {
 
     var data = {
       nombreCompleto: nombreCompleto,
+      cedula: cedula,
       direccion: direccion,
       ciudad: ciudad,
       telefono: telefono
@@ -209,6 +221,18 @@ const PedidoController = (function () {
         $fb.text("Solo se permiten d\u00edgitos.").addClass("error");
       } else if (val.length > 10) {
         $fb.text("M\u00e1ximo 10 d\u00edgitos.").addClass("error");
+      } else {
+        $fb.text("").removeClass("error");
+      }
+    });
+
+    $("#pedir-cedula").on("input", function () {
+      var val = $(this).val();
+      var $fb = $("#pedir-cedula-feedback");
+      if (/[^0-9]/.test(val)) {
+        $fb.text("Solo se permiten d\u00edgitos.").addClass("error");
+      } else if (val.length > 13) {
+        $fb.text("M\u00e1ximo 13 d\u00edgitos.").addClass("error");
       } else {
         $fb.text("").removeClass("error");
       }

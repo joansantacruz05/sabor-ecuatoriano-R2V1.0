@@ -57,18 +57,19 @@ const AuthController = (function () {
       const email = $("#register-email").val().trim();
       const password = $("#register-password").val();
       const nombreCompleto = $("#register-nombre").val().trim() || undefined;
+      const cedula = $("#register-cedula").val().trim() || undefined;
       const direccion = $("#register-direccion").val().trim() || undefined;
       const ciudad = $("#register-ciudad").val().trim() || undefined;
       const telefono = $("#register-telefono").val().trim() || undefined;
 
-      var peligro = Sanitize.validar(username) || Sanitize.validar(email) || Sanitize.validar(nombreCompleto) || Sanitize.validar(direccion) || Sanitize.validar(ciudad) || Sanitize.validar(telefono);
+      var peligro = Sanitize.validar(username) || Sanitize.validar(email) || Sanitize.validar(nombreCompleto) || Sanitize.validar(cedula) || Sanitize.validar(direccion) || Sanitize.validar(ciudad) || Sanitize.validar(telefono);
       if (peligro) {
         AuthView.mostrarErrorRegister(peligro);
         return;
       }
 
       try {
-        const user = await AuthModel.register(username, email, password, nombreCompleto, direccion, ciudad, telefono);
+        const user = await AuthModel.register(username, email, password, nombreCompleto, cedula, direccion, ciudad, telefono);
         UiView.actualizarNavUsuario(user);
         if (typeof PedidoController !== "undefined") {
           PedidoController.actualizarAvisoLogin();
